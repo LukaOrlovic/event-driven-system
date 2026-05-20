@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CreateOrderRequest {
 
     @NotBlank(message = "orderId is required")
@@ -20,4 +18,20 @@ public class CreateOrderRequest {
 
     @NotEmpty
     private List<OrderItemRequest> items;
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public List<OrderItemRequest> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItemRequest> items) {
+        this.items = items;
+    }
 }

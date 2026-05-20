@@ -13,18 +13,21 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class OrderController {
 
-    private final OrderService service;
+    private final OrderService orderService;
 
-    public OrderController(OrderService service) {
-        this.service = service;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @PostMapping
-    public CreateOrderResponse create(@Valid @RequestBody CreateOrderRequest request) {
+    public ResponseEntity<CreateOrderResponse> createOrder(@Valid @RequestBody CreateOrderRequest request) {
+        log.info("Received create order request: {}", request.getOrderId());
 
-        log.info("POST /orders called with orderId={}", request.getOrderId());
+        CreateOrderResponse response = orderService.createOrder(request);
 
-        return service.createOrder(request);
+        log.info("Order {} accepted for processing", request.getOrderId());
+
+        return ResponseEntity.accepted().body(response);
     }
 
     @GetMapping("/{orderId}")
@@ -32,6 +35,6 @@ public class OrderController {
 
         log.info("GET /orders/{} called", orderId);
 
-        return service.getOrder(orderId);
+        return orderService.getOrder(orderId);
     }
 }
