@@ -4,8 +4,6 @@ This repository contains a simple **event-driven system** implemented in Java wi
 
 The goal of this project is to showcase **event-driven communication**, **service decoupling**, and **reliable message processing** in a microservices architecture.
 
----
-
 ## Architecture
 
 The system consists of two main services:
