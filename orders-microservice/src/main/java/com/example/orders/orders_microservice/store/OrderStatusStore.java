@@ -6,11 +6,12 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class OrderStatusStore {
 
-    private final Map<String, OrderStatus> store = new HashMap<>();
+    private final Map<String, OrderStatus> store = new ConcurrentHashMap<>();
 
     public void save(String orderId, OrderStatus status) {
         store.put(orderId, status);
