@@ -15,12 +15,17 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
 
     private final OrderStatusStore store;
     private final OrderProducer producer;
     private final OrderMapper mapper;
+
+    public OrderServiceImpl(OrderStatusStore store, OrderProducer producer, OrderMapper mapper) {
+        this.store = store;
+        this.producer = producer;
+        this.mapper = mapper;
+    }
 
     public CreateOrderResponse createOrder(CreateOrderRequest request) {
 
@@ -33,7 +38,6 @@ public class OrderServiceImpl implements OrderService{
 
         store.save(request.getOrderId(), OrderStatus.CREATED);
 
-        //TODO not working
         OrderCreatedEvent event = mapper.toEvent(request);
         event.setCorrelationId(correlationId);
 
