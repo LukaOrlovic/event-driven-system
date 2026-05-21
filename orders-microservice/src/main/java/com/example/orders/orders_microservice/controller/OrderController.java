@@ -4,14 +4,16 @@ import com.example.orders.orders_microservice.dto.request.CreateOrderRequest;
 import com.example.orders.orders_microservice.dto.response.CreateOrderResponse;
 import com.example.orders.orders_microservice.service.OrderService;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.logging.Logger;
+
 @RestController
 @RequestMapping("/orders")
-@Slf4j
 public class OrderController {
+
+    private static final Logger LOGGER = Logger.getLogger(OrderController.class.getName());
 
     private final OrderService orderService;
 
@@ -21,11 +23,12 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<CreateOrderResponse> createOrder(@Valid @RequestBody CreateOrderRequest request) {
-        log.info("Received create order request: {}", request.getOrderId());
+
+        LOGGER.info("Received create order request: " + request.getOrderId());
 
         CreateOrderResponse response = orderService.createOrder(request);
 
-        log.info("Order {} accepted for processing", request.getOrderId());
+        LOGGER.info("Order " + request.getOrderId() + " accepted for processing");
 
         return ResponseEntity.accepted().body(response);
     }
@@ -33,7 +36,7 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public CreateOrderResponse get(@PathVariable String orderId) {
 
-        log.info("GET /orders/{} called", orderId);
+        LOGGER.info("GET /orders/" + orderId + " called");
 
         return orderService.getOrder(orderId);
     }

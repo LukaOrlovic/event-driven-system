@@ -6,16 +6,16 @@ import com.example.orders.orders_microservice.kafka.producer.OrderProducer;
 import com.example.orders.orders_microservice.mapper.OrderMapper;
 import com.example.orders.orders_microservice.model.OrderStatus;
 import com.example.orders.orders_microservice.store.OrderStatusStore;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.example.core.OrderCreatedEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.logging.Logger;
 
-@Slf4j
 @Service
 public class OrderServiceImpl implements OrderService{
+
+    private static final Logger LOGGER = Logger.getLogger(OrderServiceImpl.class.getName());
 
     private final OrderStatusStore store;
     private final OrderProducer producer;
@@ -31,14 +31,11 @@ public class OrderServiceImpl implements OrderService{
 
         String correlationId = UUID.randomUUID().toString();
 
-        log.info("Creating order={}, correlationId={}",
-                request.getOrderId(),
-                correlationId
-        );
+        LOGGER.info("Creating order=" + request.getOrderId() + ", correlationId=" + correlationId);
 
         store.save(request.getOrderId(), OrderStatus.CREATED);
 
-        OrderCreatedEvent event = mapper.toEvent(request);
+        OrderCreatedEvent event = mapper.toEvent(request, correlationId);
         event.setCorrelationId(correlationId);
 
         producer.send(event);
@@ -53,7 +50,7 @@ public class OrderServiceImpl implements OrderService{
 
     public CreateOrderResponse getOrder(String orderId) {
 
-        log.info("Fetching order={}", orderId);
+        LOGGER.info("Fetching order=" + orderId);
 
         OrderStatus status = store.find(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));

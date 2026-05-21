@@ -42,21 +42,21 @@ services:
       kafka:
         condition: service_healthy
 
-#  inventory-microservice:
-#    build:
-#      context: .
-#      dockerfile: inventory-microservice/Dockerfile
-#    container_name: inventory-service
-#    ports:
-#      - "8082:8082"
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=docker
-#      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
-#    networks:
-#      - event-network
-#    depends_on:
-#      kafka:
-#        condition: service_healthy
+  inventory-microservice:
+    build:
+      context: .
+      dockerfile: inventory-microservice/Dockerfile
+    container_name: inventory-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+    networks:
+      - event-network
+    depends_on:
+      kafka:
+        condition: service_healthy
 
 networks:
   event-network:

@@ -2,18 +2,22 @@ package com.example.orders.orders_microservice.kafka.consumer;
 
 import com.example.orders.orders_microservice.model.OrderStatus;
 import com.example.orders.orders_microservice.store.OrderStatusStore;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.example.core.InventoryResultEvent;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-@Slf4j
+import java.util.logging.Logger;
+
 @Component
-@RequiredArgsConstructor
 public class InventoryResultConsumer {
 
+    private static final Logger LOGGER = Logger.getLogger(InventoryResultConsumer.class.getName());
+
     private final OrderStatusStore store;
+
+    public InventoryResultConsumer(OrderStatusStore store) {
+        this.store = store;
+    }
 
     @KafkaListener(
             topics = "inventory.results",
@@ -21,11 +25,10 @@ public class InventoryResultConsumer {
     )
     public void consume(InventoryResultEvent event) {
 
-        log.info("Received inventory result: orderId={}, status={}, correlationId={}",
-                event.getOrderId(),
-                event.getStatus(),
-                event.getCorrelationId()
-        );
+        // Concatenate strings instead of using {}
+        LOGGER.info("Received inventory result: orderId=" + event.getOrderId() +
+                ", status=" + event.getStatus() +
+                ", correlationId=" + event.getCorrelationId());
 
         OrderStatus status =
                 "APPROVED".equals(event.getStatus())
@@ -34,6 +37,7 @@ public class InventoryResultConsumer {
 
         store.save(event.getOrderId(), status);
 
-        log.info("Order updated: {} -> {}", event.getOrderId(), status);
+        LOGGER.info("Order updated: orderId=" + event.getOrderId() +
+                " -> status=" + status);
     }
 }

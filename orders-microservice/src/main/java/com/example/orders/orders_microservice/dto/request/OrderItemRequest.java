@@ -3,13 +3,7 @@ package com.example.orders.orders_microservice.dto.request;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class OrderItemRequest {
 
     @NotBlank
@@ -18,4 +12,28 @@ public class OrderItemRequest {
     @NotNull
     @Min(1)
     private Integer quantity;
+
+    public OrderItemRequest(String itemId, Integer quantity) {
+        this.itemId = itemId;
+        this.quantity = quantity;
+    }
+
+    public OrderItemRequest() {
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 }

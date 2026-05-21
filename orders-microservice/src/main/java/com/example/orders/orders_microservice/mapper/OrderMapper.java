@@ -12,8 +12,10 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
 
-    @Mapping(source = "orderId", target = "orderId")
-    OrderCreatedEvent toEvent(CreateOrderRequest request);
+    @Mapping(target = "correlationId", expression = "java(correlationId)")
+    OrderCreatedEvent toEvent(CreateOrderRequest request, String correlationId);
 
-    List<OrderItemEvent> toEventItems(List<OrderItemRequest> items);
+    OrderItemEvent toOrderItemEvent(OrderItemRequest request);
+
+    List<OrderItemEvent> toOrderItemEventList(List<OrderItemRequest> items);
 }

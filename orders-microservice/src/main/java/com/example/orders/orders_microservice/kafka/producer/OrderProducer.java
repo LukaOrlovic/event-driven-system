@@ -1,14 +1,15 @@
 package com.example.orders.orders_microservice.kafka.producer;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.example.core.OrderCreatedEvent;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-@Slf4j
+import java.util.logging.Logger;
+
 @Component
 public class OrderProducer {
+
+    private static final Logger LOGGER = Logger.getLogger(OrderProducer.class.getName());
 
     private final KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
 
@@ -18,10 +19,12 @@ public class OrderProducer {
 
     public void send(OrderCreatedEvent event) {
 
-        log.info("Sending event: orderId={}, correlationId={}",
-                event.getOrderId(),
-                event.getCorrelationId()
-        );
+        LOGGER.info("Sending event: orderId=" + event.getOrderId() +
+                ", correlationId=" + event.getCorrelationId());
+
+
+
+        LOGGER.info("First ItemId: " + event.getItems().get(0).getItemId());
 
         kafkaTemplate.send(
                 "orders.created",
@@ -29,9 +32,7 @@ public class OrderProducer {
                 event
         );
 
-        log.info("Event sent: orderId={}, correlationId={}",
-                event.getOrderId(),
-                event.getCorrelationId()
-        );
+        LOGGER.info("Event sent: orderId=" + event.getOrderId() +
+                ", correlationId=" + event.getCorrelationId());
     }
 }
