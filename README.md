@@ -65,16 +65,15 @@ This command will automatically start:
 4. **Test the Order API by sending a sample order**:
 
 ```bash
-curl -X POST http://localhost:8080/orders \
--H "Content-Type: application/json" \
--d '{
-"orderId": "123",
-"items": [
-{"itemId": "item-1", "quantity": 2},
-{"itemId": "item-2", "quantity": 1}
-],
-"correlationId": "abc-123"
-}'
+curl --location 'http://localhost:8081/orders' \
+--header 'Content-Type: application/json' \
+--data '{
+        "orderId": "order123",
+        "items": [
+          {"itemId": "item-1", "quantity": 2},
+          {"itemId": "item-2", "quantity": 1}
+        ]
+      }'
 ```
 
 5. **Observe the Inventory Processing Service logs to see whether the order was successfully processed or rejected, including the correlation ID for tracing.**
